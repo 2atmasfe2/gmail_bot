@@ -1,22 +1,30 @@
-from mail import real_gmail
+import threading
+from mails_search import gmail_parse
+from config import Keys
 from telegram import Bot
 from time import sleep
 from telegram.utils.request import Request
 from telegram.ext import Updater
-import threading
 
-hat_id = 0000000000  # chat_id для line 17
+
+CHAT_ID = Keys.CHAT_ID_LOAD  # chat_id для line 17
+TOKEN = Keys.TOKEN_LOAD  # Токен для бота
+URL = Keys.URL_LOAD  # Проксирующий URL
+
 
 # функция, опрашивающая функцию real_gmail
 def gmail_checking():
     while True:
-        mails = real_gmail()
+        mails = gmail_parse()
         if mails:
             for mail in mails:
-                Bot.send_message(chat_id=hat_id, text="Вам пришло новое сообщение!")
+                Bot.send_message(chat_id=CHAT_ID, text="Вам пришло новое сообщение!")
         sleep(0.1)
-        t = threading.Thread(target=gmail_checking, args=())  # Запуск функции в отдельном потоке
-        t.start()
+
+
+t = threading.Thread(target=gmail_checking, args=())  # Запуск функции в отдельном потоке
+t.start()
+
 
 # Скелет бота
 def main():
@@ -26,8 +34,8 @@ def main():
 
     bot = Bot(
         request=req,
-        token='###',  # Токен для бота
-        base_url='###',  # Проксирующий URL
+        token=TOKEN,
+        base_url=URL,
     )
 
     updater = Updater(
@@ -41,6 +49,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-

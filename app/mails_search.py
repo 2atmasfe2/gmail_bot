@@ -1,18 +1,18 @@
 import email
 import imaplib
+from config import Keys
 
-EMAIL = '###'  # Email login
-PASSWORD = '###'  # Email password
-SERVER = '###'  # Сервер для работы с почтой
+EMAIL = Keys.EMAIL_LOGIN  # Email login
+PASSWORD = Keys.EMAIL_PASSWORD  # Email password
+SERVER = Keys.EMAIL_SERVER  # Сервер для работы с почтой
 
 
 mail = imaplib.IMAP4_SSL(SERVER)
 mail.login(EMAIL, PASSWORD)
-mail.select('inbox')  # чтение папки "Входящие". При выводе сообщений от конкретного отправителя в отдельную папку
-                      # можно избавиться от условия в line 38
+mail.select('inbox')  # чтение папки "Входящие"
 
 
-def real_gmail():
+def gmail_parse():
     mail.select('inbox')
     status, data = mail.search(None, 'UNSEEN')
     mail_ids = []
@@ -45,6 +45,6 @@ def real_gmail():
 if __name__ == '__main__':
     try:
         while True:
-            real_gmail()
+            gmail_parse()
     finally:
         print("Thanks")
